@@ -1,0 +1,51 @@
+Steps to run deepseeek + ollama + open web-ui
+
+
+Install nividia driver software.
+
+$ nvidia-smi 
+    
++-----------------------------------------------------------------------------------------+
+| NVIDIA-SMI 550.120                Driver Version: 550.120        CUDA Version: 12.4     |
+|-----------------------------------------+------------------------+----------------------+
+| GPU  Name                 Persistence-M | Bus-Id          Disp.A | Volatile Uncorr. ECC |
+| Fan  Temp   Perf          Pwr:Usage/Cap |           Memory-Usage | GPU-Util  Compute M. |
+|                                         |                        |               MIG M. |
+|=========================================+========================+======================|
+|   0  NVIDIA GeForce RTX 4070 ...    Off |   00000000:01:00.0 Off |                  N/A |
+| N/A   41C    P8              3W /   55W |      12MiB /   8188MiB |      0%      Default |
+|                                         |                        |                  N/A |
++-----------------------------------------+------------------------+----------------------+
+
+
+Max it run 32b model with this vram capacity.
+
+for higher models, need more GPU.
+
+if vram is not sufficient ollama loads the model into CPU and gpu will be ignored. for safer side add swap space in os partition as well.
+
+$ curl -fsSL https://ollama.com/install.sh | sh
+
+$ ollama run deepseek-r1:32b
+
+it runs deepseek locally, from console we can interact to deepseek. Without internet also we can query and get the results.
+
+
+To interact with locally running model we can use open web-ui or librechat.
+
+docker run -d --network=host -v open-webui:/app/backend/data -e OLLAMA_BASE_URL=http://127.0.0.1:11434 --name open-webui --restart always ghcr.io/open-webui/open-webui:main
+
+Ollama runs on http://127.0.0.1:11434.
+
+we can interact using normal api's as well.
+
+curl http://localhost:11434/api/chat -d '{
+  "model": "llama3.2",
+  "messages": [
+    { "role": "user", "content": "why is the sky blue?" }
+  ]
+}'
+
+
+  Refer:
+https://github.com/ollama/ollama/tree/main?tab=readme-ov-file
